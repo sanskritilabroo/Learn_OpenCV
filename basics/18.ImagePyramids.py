@@ -1,26 +1,24 @@
 import cv2
+import numpy as np
 
-img=cv2.imread("lena.jpg")
-# lr1=cv2.pyrDown(img)#gaussian
-# hr1=cv2.pyrUp(lr1)
-layer=img.copy()
-gp=[layer]
+img = cv2.imread("lena.jpg")
+layer = img.copy()
+gaussian_pyramid_list = [layer] #consisting of pyramid layers
+
 for i in range(6):
-    layer=cv2.pyrDown(layer)
-    gp.append(layer)
-    # cv2.imshow(str(i),layer)
+    layer = cv2.pyrDown(layer) #down
+    gaussian_pyramid_list.append(layer)
+    #cv2.imshow(str(i), layer)
 
-layer=gp[5]
-cv2.imshow("upper level gaussian pyramid",layer)
-lp=[layer]
+layer = gaussian_pyramid_list[5]
+cv2.imshow('upper level Gaussian Pyramid', layer)
+laplacian_pyramid_list = [layer]
 
-for i in range(5,0,-1):
-    gaussian_extend=cv2.pyrUp(gp[i])
-    laplacian=cv2.subtract(gp[i-1],gaussian_extend)
-    cv2.imshow(str(i),laplacian)
+for i in range(5, 0, -1): #navigating
+    gaussian_extended = cv2.pyrUp(gaussian_pyramid_list[i]) #up
+    laplacian = cv2.subtract(gaussian_pyramid_list[i-1], gaussian_extended)
+    cv2.imshow(str(i), laplacian)
 
-cv2.imshow("original image",img)
-# cv2.imshow("pyrdown 1",lr1)
-# cv2.imshow("pyrup 1",hr1)
+cv2.imshow("Original image", img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
